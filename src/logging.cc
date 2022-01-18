@@ -133,6 +133,8 @@ GLOG_DEFINE_bool(log_prefix, true,
                  "Prepend the log prefix to the start of each log line");
 GLOG_DEFINE_bool(log_prefix_include_pid, false,
                  "Include PID into the log prefix");
+GLOG_DEFINE_bool(timestamp_in_logfile_name, true,
+                 "Include timestamp into the logfile name");
 GLOG_DEFINE_int32(minloglevel, 0, "Messages logged at a lower level than this don't "
                   "actually get logged anywhere");
 GLOG_DEFINE_int32(logbuflevel, 0,
@@ -921,8 +923,10 @@ void LogFileObject::FlushUnlocked(){
 }
 
 bool LogFileObject::CreateLogfile(const string& time_pid_string) {
-  string string_filename = base_filename_+filename_extension_+
-                           time_pid_string;
+  string string_filename = base_filename_+filename_extension_;
+  if (FLAGS_timestamp_in_logfile_name) {
+    string_filename += time_pid_string;
+  }
   const char* filename = string_filename.c_str();
   int fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, FLAGS_logfile_mode);
   if (fd == -1) return false;
