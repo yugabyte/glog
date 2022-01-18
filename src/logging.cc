@@ -103,6 +103,9 @@ static bool BoolFromEnv(const char *varname, bool defval) {
   return memchr("tTyY1\0", valstr[0], 6) != NULL;
 }
 
+GLOG_DEFINE_bool(timestamp_in_logfile_name,
+                 BoolFromEnv("GOOGLE_TIMESTAMP_IN_LOGFILE_NAME", true),
+                 "put a timestamp at the end of the log file name");
 GLOG_DEFINE_bool(logtostderr, BoolFromEnv("GOOGLE_LOGTOSTDERR", false),
                  "log messages go to stderr instead of logfiles");
 GLOG_DEFINE_bool(alsologtostderr, BoolFromEnv("GOOGLE_ALSOLOGTOSTDERR", false),
@@ -133,8 +136,6 @@ GLOG_DEFINE_bool(log_prefix, true,
                  "Prepend the log prefix to the start of each log line");
 GLOG_DEFINE_bool(log_prefix_include_pid, false,
                  "Include PID into the log prefix");
-GLOG_DEFINE_bool(timestamp_in_logfile_name, true,
-                 "Include timestamp into the logfile name");
 GLOG_DEFINE_int32(minloglevel, 0, "Messages logged at a lower level than this don't "
                   "actually get logged anywhere");
 GLOG_DEFINE_int32(logbuflevel, 0,
@@ -928,7 +929,12 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
     string_filename += time_pid_string;
   }
   const char* filename = string_filename.c_str();
-  int fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, FLAGS_logfile_mode);
+  int flags = O_WRONLY | O_CREAT;
+  if (FLAGS_timestamp_in_logfile_name) {
+    //demand that the file is unique for our timestamp (fail if it exists).
+    flags = flags | O_EXCL;
+  }
+  int fd = open(filename, flags, FLAGS_logfile_mode);
   if (fd == -1) return false;
 #ifdef HAVE_FCNTL
   // Mark the file close-on-exec. We don't really care if this fails
@@ -938,7 +944,9 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
   file_ = fdopen(fd, "a");  // Make a FILE*.
   if (file_ == NULL) {  // Man, we're screwed!
     close(fd);
-    unlink(filename);  // Erase the half-baked evidence: an unusable log file
+    if (FLAGS_timestamp_in_logfile_name) {
+      unlink(filename);  // Erase the half-baked evidence: an unusable log file, only if we just created it.
+    }
     return false;
   }
 
