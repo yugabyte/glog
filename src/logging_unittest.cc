@@ -108,7 +108,6 @@ static void TestDCHECK();
 static void TestSTREQ();
 static void TestBasename();
 static void TestBasenameAppendWhenNoTimestamp();
-static void TestTwoProcessesWrite();
 static void TestSymlink();
 static void TestExtension();
 static void TestWrapper();
@@ -235,7 +234,6 @@ int main(int argc, char **argv) {
 
   TestBasename();
   TestBasenameAppendWhenNoTimestamp();
-  TestTwoProcessesWrite();
   TestSymlink();
   TestExtension();
   TestWrapper();
