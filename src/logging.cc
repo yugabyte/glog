@@ -103,6 +103,8 @@ static bool BoolFromEnv(const char *varname, bool defval) {
   return memchr("tTyY1\0", valstr[0], 6) != NULL;
 }
 
+GLOG_DEFINE_bool(log_header_message, true,
+                "log header message to log file");
 GLOG_DEFINE_bool(timestamp_in_logfile_name,
                  BoolFromEnv("GOOGLE_TIMESTAMP_IN_LOGFILE_NAME", true),
                  "put a timestamp at the end of the log file name");
@@ -1103,34 +1105,36 @@ void LogFileObject::Write(bool force_flush,
       }
     }
 
-    // Write a header message into the log file
-    ostringstream file_header_stream;
-    file_header_stream.fill('0');
-    file_header_stream << "Log file created at: "
-                       << 1900+tm_time.tm_year << '/'
-                       << setw(2) << 1+tm_time.tm_mon << '/'
-                       << setw(2) << tm_time.tm_mday
-                       << ' '
-                       << setw(2) << tm_time.tm_hour << ':'
-                       << setw(2) << tm_time.tm_min << ':'
-                       << setw(2) << tm_time.tm_sec << '\n'
-                       << "Running on machine: "
-                       << LogDestination::hostname() << '\n';
+    // Write a header message into the log file if the flag is set
+    if (FLAGS_log_header_message) {
+      ostringstream file_header_stream;
+      file_header_stream.fill('0');
+      file_header_stream << "Log file created at: "
+                        << 1900+tm_time.tm_year << '/'
+                        << setw(2) << 1+tm_time.tm_mon << '/'
+                        << setw(2) << tm_time.tm_mday
+                        << ' '
+                        << setw(2) << tm_time.tm_hour << ':'
+                        << setw(2) << tm_time.tm_min << ':'
+                        << setw(2) << tm_time.tm_sec << '\n'
+                        << "Running on machine: "
+                        << LogDestination::hostname() << '\n';
 
-    if(!g_application_fingerprint.empty()) {
-      file_header_stream << "Application fingerprint: " << g_application_fingerprint << '\n';
+      if(!g_application_fingerprint.empty()) {
+        file_header_stream << "Application fingerprint: " << g_application_fingerprint << '\n';
+      }
+
+      file_header_stream << "Running duration (h:mm:ss): "
+                        << PrettyDuration(static_cast<int>(WallTime_Now() - start_time_)) << '\n'
+                        << "Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu "
+                        << "threadid file:line] msg" << '\n';
+      const string& file_header_string = file_header_stream.str();
+
+      const int header_len = file_header_string.size();
+      fwrite(file_header_string.data(), 1, header_len, file_);
+      file_length_ += header_len;
+      bytes_since_flush_ += header_len;
     }
-
-    file_header_stream << "Running duration (h:mm:ss): "
-                       << PrettyDuration(static_cast<int>(WallTime_Now() - start_time_)) << '\n'
-                       << "Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu "
-                       << "threadid file:line] msg" << '\n';
-    const string& file_header_string = file_header_stream.str();
-
-    const int header_len = file_header_string.size();
-    fwrite(file_header_string.data(), 1, header_len, file_);
-    file_length_ += header_len;
-    bytes_since_flush_ += header_len;
   }
 
   // Write to LOG file
