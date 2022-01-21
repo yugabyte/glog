@@ -1110,24 +1110,24 @@ void LogFileObject::Write(bool force_flush,
       ostringstream file_header_stream;
       file_header_stream.fill('0');
       file_header_stream << "Log file created at: "
-                        << 1900+tm_time.tm_year << '/'
-                        << setw(2) << 1+tm_time.tm_mon << '/'
-                        << setw(2) << tm_time.tm_mday
-                        << ' '
-                        << setw(2) << tm_time.tm_hour << ':'
-                        << setw(2) << tm_time.tm_min << ':'
-                        << setw(2) << tm_time.tm_sec << '\n'
-                        << "Running on machine: "
-                        << LogDestination::hostname() << '\n';
+                         << 1900+tm_time.tm_year << '/'
+                         << setw(2) << 1+tm_time.tm_mon << '/'
+                         << setw(2) << tm_time.tm_mday
+                         << ' '
+                         << setw(2) << tm_time.tm_hour << ':'
+                         << setw(2) << tm_time.tm_min << ':'
+                         << setw(2) << tm_time.tm_sec << '\n'
+                         << "Running on machine: "
+                         << LogDestination::hostname() << '\n';
 
       if(!g_application_fingerprint.empty()) {
         file_header_stream << "Application fingerprint: " << g_application_fingerprint << '\n';
       }
 
       file_header_stream << "Running duration (h:mm:ss): "
-                        << PrettyDuration(static_cast<int>(WallTime_Now() - start_time_)) << '\n'
-                        << "Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu "
-                        << "threadid file:line] msg" << '\n';
+                         << PrettyDuration(static_cast<int>(WallTime_Now() - start_time_)) << '\n'
+                         << "Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu "
+                         << "threadid file:line] msg" << '\n';
       const string& file_header_string = file_header_stream.str();
 
       const int header_len = file_header_string.size();
