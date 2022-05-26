@@ -1802,43 +1802,11 @@ static string ShellEscape(const string& src) {
 // log_mutex.
 static bool SendEmailInternal(const char*dest, const char *subject,
                               const char*body, bool use_logging) {
-  if (dest && *dest) {
-    if ( use_logging ) {
-      VLOG(1) << "Trying to send TITLE:" << subject
-              << " BODY:" << body << " to " << dest;
-    } else {
-      fprintf(stderr, "Trying to send TITLE: %s BODY: %s to %s\n",
-              subject, body, dest);
-    }
-
-    string cmd =
-        FLAGS_logmailer + " -s" +
-        ShellEscape(subject) + " " + ShellEscape(dest);
-    VLOG(4) << "Mailing command: " << cmd;
-
-    FILE* pipe = popen(cmd.c_str(), "w");
-    if (pipe != NULL) {
-      // Add the body if we have one
-      if (body)
-        fwrite(body, sizeof(char), strlen(body), pipe);
-      bool ok = pclose(pipe) != -1;
-      if ( !ok ) {
-        if ( use_logging ) {
-          LOG(ERROR) << "Problems sending mail to " << dest << ": "
-                     << StrError(errno);
-        } else {
-          fprintf(stderr, "Problems sending mail to %s: %s\n",
-                  dest, StrError(errno).c_str());
-        }
-      }
-      return ok;
-    } else {
-      if ( use_logging ) {
-        LOG(ERROR) << "Unable to send mail to " << dest;
-      } else {
-        fprintf(stderr, "Unable to send mail to %s\n", dest);
-      }
-    }
+  const char* error = "Sending emails is disabled (#11930).";
+  if ( use_logging ) {
+    LOG(ERROR) << error;
+  } else {
+    fputs(error, stderr);
   }
   return false;
 }
