@@ -1802,7 +1802,7 @@ static string ShellEscape(const string& src) {
 // log_mutex.
 static bool SendEmailInternal(const char*dest, const char *subject,
                               const char*body, bool use_logging) {
-  const char* error = "Sending emails is disabled for security purposes (#11930).";
+  const char* error = "Sending emails is disabled (#11930).";
   if ( use_logging ) {
     LOG(ERROR) << error;
   } else {
