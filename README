@@ -3,3 +3,6 @@ module.  Documentation for the implementation is in doc/.
 
 See INSTALL for (generic) installation instructions for C++: basically
    ./autogen.sh && ./configure && make && make install
+
+If you want to make a change to our glog fork, you can fork and pull yugabyte/glog and check out 0.4.0-yb, child branch from it and make a changes. Push your branch to remote and open a PR to merge directly onto the 0.4.0-yb branch.
+You can test changes before opening the PR by pushing/creating a tag on your fork and then editing the appropriate file in python/build_definitions locally for yugabyte-db-thirdparty to point to your fork/tag, building thirdparty locally, then compiling yugabyte-db locally with YB_THIRDPARTY_DIR env variable set to path to your clone of yugabyte-db-thirdparty
