@@ -1009,8 +1009,9 @@ void LogFileObject::Write(bool force_flush,
     if (++rollover_attempt_ != kRolloverAttemptFrequency) return;
     rollover_attempt_ = 0;
 
-    struct ::tm tm_time;
+    struct ::tm tm_time, utc_tm_time;
     localtime_r(&timestamp, &tm_time);
+    gmtime_r(&timestamp, &utc_tm_time);
 
     // The logfile's filename will have the date/time & pid in it
     ostringstream time_pid_stream;
@@ -1095,6 +1096,14 @@ void LogFileObject::Write(bool force_flush,
                        << setw(2) << tm_time.tm_hour << ':'
                        << setw(2) << tm_time.tm_min << ':'
                        << setw(2) << tm_time.tm_sec << '\n'
+                       << "Current UTC time: "
+                       << 1900+utc_tm_time.tm_year << '/'
+                       << setw(2) << 1+utc_tm_time.tm_mon << '/'
+                       << setw(2) << utc_tm_time.tm_mday
+                       << ' '
+                       << setw(2) << utc_tm_time.tm_hour << ':'
+                       << setw(2) << utc_tm_time.tm_min << ':'
+                       << setw(2) << utc_tm_time.tm_sec << '\n'
                        << "Running on machine: "
                        << LogDestination::hostname() << '\n';
 
