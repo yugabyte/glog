@@ -1097,8 +1097,8 @@ void LogFileObject::Write(bool force_flush,
                        << setw(2) << tm_time.tm_min << ':'
                        << setw(2) << tm_time.tm_sec << '\n'
                        << "Current UTC time: "
-                       << 1900+utc_tm_time.tm_year << '/'
-                       << setw(2) << 1+utc_tm_time.tm_mon << '/'
+                       << 1900 + utc_tm_time.tm_year << '/'
+                       << setw(2) << 1 + utc_tm_time.tm_mon << '/'
                        << setw(2) << utc_tm_time.tm_mday
                        << ' '
                        << setw(2) << utc_tm_time.tm_hour << ':'
