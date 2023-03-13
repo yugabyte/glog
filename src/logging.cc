@@ -388,6 +388,14 @@ const char* GetLogSeverityName(LogSeverity severity) {
   return LogSeverityNames[severity];
 }
 
+const char* EmptyPrefixLog() { return ""; }
+
+const char* (*log_prefix_func)() = &EmptyPrefixLog;
+
+GOOGLE_GLOG_DLL_DECL void SetLogPrefix(const char* (*prefix_func)()) {
+  log_prefix_func = prefix_func;
+}
+
 static bool SendEmailInternal(const char*dest, const char *subject,
                               const char*body, bool use_logging);
 
@@ -1315,16 +1323,11 @@ void LogMessage::Init(const char* file,
   //    (log level, GMT month, date, time, thread_id, file basename, line)
   // We exclude the thread_id for the default thread.
   if (FLAGS_log_prefix && (line != kNoLogPrefix)) {
-    stream() << LogSeverityNames[severity][0]
-             << setw(2) << 1+data_->tm_time_.tm_mon
-             << setw(2) << data_->tm_time_.tm_mday
-             << ' '
-             << setw(2) << data_->tm_time_.tm_hour  << ':'
-             << setw(2) << data_->tm_time_.tm_min   << ':'
-             << setw(2) << data_->tm_time_.tm_sec   << "."
-             << setw(6) << usecs
-             << ' '
-             << setfill(' ') << setw(5);
+    stream() << LogSeverityNames[severity][0] << setw(2)
+             << 1 + data_->tm_time_.tm_mon << setw(2) << data_->tm_time_.tm_mday << ' ' << setw(2)
+             << data_->tm_time_.tm_hour << ':' << setw(2) << data_->tm_time_.tm_min << ':'
+             << setw(2) << data_->tm_time_.tm_sec << "." << setw(6) << usecs << ' ' << setfill(' ')
+             << setw(5);
     if (FLAGS_log_prefix_include_pid) {
       stream() << static_cast<unsigned int>(getpid()) << setfill('0') << ' ';
     }
