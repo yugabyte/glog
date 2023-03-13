@@ -388,7 +388,10 @@ const char* GetLogSeverityName(LogSeverity severity) {
   return LogSeverityNames[severity];
 }
 
-const char* EmptyPrefixLog() { return ""; }
+const char* EmptyPrefixLog() {
+  const static char c = '\0';
+  return &c;
+}
 
 const char* (*log_prefix_func)() = &EmptyPrefixLog;
 
@@ -1323,7 +1326,7 @@ void LogMessage::Init(const char* file,
   //    (log level, GMT month, date, time, thread_id, file basename, line)
   // We exclude the thread_id for the default thread.
   if (FLAGS_log_prefix && (line != kNoLogPrefix)) {
-    stream() << LogSeverityNames[severity][0] << setw(2)
+    stream() << log_prefix_func() << LogSeverityNames[severity][0] << setw(2)
              << 1 + data_->tm_time_.tm_mon << setw(2) << data_->tm_time_.tm_mday << ' ' << setw(2)
              << data_->tm_time_.tm_hour << ':' << setw(2) << data_->tm_time_.tm_min << ':'
              << setw(2) << data_->tm_time_.tm_sec << "." << setw(6) << usecs << ' ' << setfill(' ')
