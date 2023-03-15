@@ -1321,10 +1321,16 @@ void LogMessage::Init(const char* file,
   //    (log level, GMT month, date, time, thread_id, file basename, line)
   // We exclude the thread_id for the default thread.
   if (FLAGS_log_prefix && (line != kNoLogPrefix)) {
-    stream() << (log_prefix_func ? log_prefix_func() : '') << LogSeverityNames[severity][0]
-             << setw(2) << 1 + data_->tm_time_.tm_mon << setw(2) << data_->tm_time_.tm_mday << ' '
-             << setw(2) << data_->tm_time_.tm_hour << ':' << setw(2) << data_->tm_time_.tm_min
-             << ':' << setw(2) << data_->tm_time_.tm_sec << "." << setw(6) << usecs << ' '
+    stream() << (log_prefix_func ? log_prefix_func() : '')
+             << LogSeverityNames[severity][0]
+             << setw(2) << 1 + data_->tm_time_.tm_mon
+             << setw(2) << data_->tm_time_.tm_mday
+             << ' '
+             << setw(2) << data_->tm_time_.tm_hour << ':'
+             << setw(2) << data_->tm_time_.tm_min << ':'
+             << setw(2) << data_->tm_time_.tm_sec << "."
+             << setw(6) << usecs
+             << ' '
              << setfill(' ') << setw(5);
     if (FLAGS_log_prefix_include_pid) {
       stream() << static_cast<unsigned int>(getpid()) << setfill('0') << ' ';
