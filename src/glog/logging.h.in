@@ -1528,6 +1528,8 @@ GOOGLE_GLOG_DLL_DECL void TruncateStdoutStderr();
 // Thread-safe.
 GOOGLE_GLOG_DLL_DECL const char* GetLogSeverityName(LogSeverity severity);
 
+GOOGLE_GLOG_DLL_DECL void SetLogPrefix(const char*(*prefix_func)());
+
 // ---------------------------------------------------------------------
 // Implementation details that are not useful to most clients
 // ---------------------------------------------------------------------
