@@ -1099,16 +1099,16 @@ const LogSeverity GLOG_0 = GLOG_ERROR;
 
 // Log only in verbose mode.
 
-#define VLOG(verboselevel) LOG_IF(INFO, VLOG_IS_ON(verboselevel))
+#define VLOG(verboselevel) LOG_IF(INFO, VLOG_IS_ON(verboselevel)) << "V" << verboselevel << ": "
 
 #define VLOG_IF(verboselevel, condition) \
-  LOG_IF(INFO, (condition) && VLOG_IS_ON(verboselevel))
+  LOG_IF(INFO, (condition) && VLOG_IS_ON(verboselevel)) << "V" << verboselevel << ": "
 
 #define VLOG_EVERY_N(verboselevel, n) \
-  LOG_IF_EVERY_N(INFO, VLOG_IS_ON(verboselevel), n)
+  LOG_IF_EVERY_N(INFO, VLOG_IS_ON(verboselevel), n) << "V" << verboselevel << ": "
 
 #define VLOG_IF_EVERY_N(verboselevel, condition, n) \
-  LOG_IF_EVERY_N(INFO, (condition) && VLOG_IS_ON(verboselevel), n)
+  LOG_IF_EVERY_N(INFO, (condition) && VLOG_IS_ON(verboselevel), n) << "V" << verboselevel << ": "
 
 namespace base_logging {
 
