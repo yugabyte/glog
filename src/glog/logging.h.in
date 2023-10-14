@@ -1675,8 +1675,6 @@ GOOGLE_GLOG_DLL_DECL void InstallCustomStackUnwinder(
 // unwinder.
 GOOGLE_GLOG_DLL_DECL void UninstallCustomStackUnwinder();
 
-void (*writer)(const char* data, int size)
-
 @ac_google_end_namespace@
 
 #endif // _LOGGING_H_
