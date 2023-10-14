@@ -240,8 +240,6 @@ void SetCrashReason(const CrashReason* r);
 void InitGoogleLoggingUtilities(const char* argv0);
 void ShutdownGoogleLoggingUtilities();
 
-int GetStackTrace(void** result, int max_depth, int skip_count);
-
 }  // namespace glog_internal_namespace_
 
 _END_GOOGLE_NAMESPACE_
