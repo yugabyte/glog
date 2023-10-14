@@ -91,7 +91,7 @@ static void **NextStackFrame(void **old_sp) {
 }
 
 // If you change this function, also change GetStackFrames below.
-int GetStackTrace(void** result, int max_depth, int skip_count) {
+int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
   void **sp;
 
 #ifdef __GNUC__

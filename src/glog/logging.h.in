@@ -1661,6 +1661,22 @@ GOOGLE_GLOG_DLL_DECL void InstallFailureSignalHandler();
 GOOGLE_GLOG_DLL_DECL void InstallFailureWriter(
     void (*writer)(const char* data, int size));
 
+GOOGLE_GLOG_DLL_DECL int GlogCollectStackTrace(
+    void** result, int max_depth, int skip_count);
+
+
+typedef int (*StackUnwinderFunc)(void**, int, int);
+
+// Install a custom function to collect a stack trace.
+GOOGLE_GLOG_DLL_DECL void InstallCustomStackUnwinder(
+    StackUnwinderFunc collector_fn);
+
+// Undo the effect of InstallCustomStackUnwinder and use the default stack
+// unwinder.
+GOOGLE_GLOG_DLL_DECL void UninstallCustomStackUnwinder();
+
+void (*writer)(const char* data, int size)
+
 @ac_google_end_namespace@
 
 #endif // _LOGGING_H_

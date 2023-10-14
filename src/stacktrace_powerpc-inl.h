@@ -74,7 +74,7 @@ void StacktracePowerPCDummyFunction() __attribute__((noinline));
 void StacktracePowerPCDummyFunction() { __asm__ volatile(""); }
 
 // If you change this function, also change GetStackFrames below.
-int GetStackTrace(void** result, int max_depth, int skip_count) {
+int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
   void **sp;
   // Apple OS X uses an old version of gnu as -- both Darwin 7.9.0 (Panther)
   // and Darwin 8.8.1 (Tiger) use as 1.38.  This means we have to use a
