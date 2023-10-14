@@ -394,17 +394,6 @@ GOOGLE_GLOG_DLL_DECL void SetLogPrefix(const char* (*prefix_func)()) {
   log_prefix_func = prefix_func;
 }
 
-static StackUnwinderFunc g_custom_stack_unwinder_func = &GetStackTraceImpl;
-
-void InstallCustomStackUnwinder(StackUnwinderFunc custom_stack_unwinder_func) {
-  g_custom_stack_unwinder_func = custom_stack_unwinder_func;
-}
-
-void UninstallCustomStackUnwinder() {
-  g_custom_stack_unwinder_func = &GetStackTraceImpl;
-}
-
-
 static bool SendEmailInternal(const char*dest, const char *subject,
                               const char*body, bool use_logging);
 

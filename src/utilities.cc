@@ -77,12 +77,6 @@ GLOG_DEFINE_bool(symbolize_stacktrace, true,
 
 _START_GOOGLE_NAMESPACE_
 
-extern StackUnwinderFunc g_custom_stack_unwinder_func;
-
-int GetStackTrace(void** result, int max_depth, int skip_count) {
-  return g_custom_stack_unwinder_func(result, max_depth, skip_count + 1);
-}
-
 typedef void DebugWriter(const char*, void*);
 
 // The %p field width for printf() functions is two characters per byte.
@@ -370,6 +364,20 @@ void ShutdownGoogleLoggingUtilities() {
 #ifdef HAVE_SYSLOG_H
   closelog();
 #endif
+}
+
+static StackUnwinderFunc g_custom_stack_unwinder_func = &GetStackTraceImpl;
+
+int GetStackTrace(void** result, int max_depth, int skip_count) {
+  return g_custom_stack_unwinder_func(result, max_depth, skip_count + 1);
+}
+
+void InstallCustomStackUnwinder(StackUnwinderFunc custom_stack_unwinder_func) {
+  g_custom_stack_unwinder_func = custom_stack_unwinder_func;
+}
+
+void UninstallCustomStackUnwinder() {
+  g_custom_stack_unwinder_func = &GetStackTraceImpl;
 }
 
 }  // namespace glog_internal_namespace_
