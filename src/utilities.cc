@@ -366,7 +366,7 @@ void ShutdownGoogleLoggingUtilities() {
 #endif
 }
 
-static StackUnwinderFunc g_custom_stack_unwinder_func = &GetStackTraceImpl;
+static StackUnwinderFunc g_custom_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
 
 }  // namespace glog_internal_namespace_
 
