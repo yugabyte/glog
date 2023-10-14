@@ -366,8 +366,12 @@ void ShutdownGoogleLoggingUtilities() {
 #endif
 }
 
-static StackUnwinderFunc g_custom_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
+}
 
+int GetStackTraceImpl(void** result, int max_depth, int skip_count);
+
+namespace glog_internal_namespace_ {
+static StackUnwinderFunc g_custom_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
 }  // namespace glog_internal_namespace_
 
 int GetStackTrace(void** result, int max_depth, int skip_count) {
