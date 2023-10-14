@@ -37,22 +37,33 @@
 
 _START_GOOGLE_NAMESPACE_
 
-// If you change this function, also change GetStackFrames below.
 int GetStackTrace(void** result, int max_depth, int skip_count) {
-  static const int kStackLength = 64;
-  void * stack[kStackLength];
-  int size;
+  static thread_local bool is_collecting_stack = false;
 
-  size = backtrace(stack, kStackLength);
+  if (is_collecting_stack) {
+    // It might be unsafe to call backtrace recursively. Return an empty
+    // stack trace. A thread can get here if while it was collecting its own
+    // stack, it got interrupted by a signal request from another thread.
+    return 0;
+  }
+
+  static const int kMaxStackDepth = 256;
+  if (skip_count < 0)
+    skip_count = 0;
   skip_count++;  // we want to skip the current frame as well
+  int capacity = std::min(max_depth + skip_count, kMaxStackDepth);
+  void** stack = alloca(capacity * sizeof(void*));
+
+  is_collecting_stack = true;
+  int size = backtrace(stack, capacity);
+  is_collecting_stack = false;
+
   int result_count = size - skip_count;
   if (result_count < 0)
     result_count = 0;
   if (result_count > max_depth)
     result_count = max_depth;
-  for (int i = 0; i < result_count; i++)
-    result[i] = stack[i + skip_count];
-
+  memcpy(result, stack, sizeof(void*) * result_count);
   return result_count;
 }
 

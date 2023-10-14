@@ -105,6 +105,7 @@
 // correctly when GetStackTrace() is called with max_depth == 0.
 // Some code may do that.
 
+#if !defined(__linux__)
 #if defined(HAVE_LIB_UNWIND)
 # define STACKTRACE_H "stacktrace_libunwind-inl.h"
 #elif !defined(NO_FRAME_POINTER)
@@ -112,20 +113,29 @@
 #  define STACKTRACE_H "stacktrace_x86-inl.h"
 # elif defined(__x86_64__) && __GNUC__ >= 2 && HAVE_UNWIND_H
 #  define STACKTRACE_H "stacktrace_x86_64-inl.h"
+#  define YB_USING_UNWIND_H 1
 # elif (defined(__ppc__) || defined(__PPC__)) && __GNUC__ >= 2
 #  define STACKTRACE_H "stacktrace_powerpc-inl.h"
 # elif defined(OS_WINDOWS)
 #  define STACKTRACE_H "stacktrace_windows-inl.h"
 # endif
 #endif
+#endif
 
 #if !defined(STACKTRACE_H) && defined(HAVE_EXECINFO_H)
 # define STACKTRACE_H "stacktrace_generic-inl.h"
+# define YB_USING_STRACKTRACE_GENERIC_H 1
+#endif
+
+#if defined(__linux__) && !YB_USING_STRACKTRACE_GENERIC_H
+#error "YugabyteDB requirement: we should always use glibc stack unwinder on Linux"
+#undef YB_USING_STRACKTRACE_GENERIC_H
 #endif
 
 #if defined(STACKTRACE_H)
-# define HAVE_STACKTRACE
+# define HAVE_STACKTRACE 1
 #endif
+
 
 #ifndef HAVE_SYMBOLIZE
 // defined by gcc
