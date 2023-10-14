@@ -1667,13 +1667,12 @@ GOOGLE_GLOG_DLL_DECL int GlogCollectStackTrace(
 
 typedef int (*StackUnwinderFunc)(void**, int, int);
 
-// Install a custom function to collect a stack trace.
-GOOGLE_GLOG_DLL_DECL void InstallCustomStackUnwinder(
-    StackUnwinderFunc collector_fn);
+GOOGLE_GLOG_DLL_DECL void InstallStackUnwinder(StackUnwinderFunc collector_fn);
 
-// Undo the effect of InstallCustomStackUnwinder and use the default stack
-// unwinder.
-GOOGLE_GLOG_DLL_DECL void UninstallCustomStackUnwinder();
+GOOGLE_GLOG_DLL_DECL void RestoreDefaultStackUnwinder();
+
+GOOGLE_GLOG_DLL_DECL int GetStackTrace(
+    void** result, int max_depth, int skip_count);
 
 @ac_google_end_namespace@
 
