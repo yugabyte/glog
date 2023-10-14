@@ -2187,5 +2187,6 @@ void ShutdownGoogleLogging() {
   LogDestination::DeleteLogDestinations();
   delete logging_directories_list;
   logging_directories_list = NULL;
+}
 
 _END_GOOGLE_NAMESPACE_

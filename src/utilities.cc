@@ -368,19 +368,20 @@ void ShutdownGoogleLoggingUtilities() {
 
 static StackUnwinderFunc g_custom_stack_unwinder_func = &GetStackTraceImpl;
 
+}  // namespace glog_internal_namespace_
+
 int GetStackTrace(void** result, int max_depth, int skip_count) {
-  return g_custom_stack_unwinder_func(result, max_depth, skip_count + 1);
+  return glog_internal_namespace_::g_custom_stack_unwinder_func(
+      result, max_depth, skip_count + 1);
 }
 
 void InstallCustomStackUnwinder(StackUnwinderFunc custom_stack_unwinder_func) {
-  g_custom_stack_unwinder_func = custom_stack_unwinder_func;
+  glog_internal_namespace_::g_custom_stack_unwinder_func = custom_stack_unwinder_func;
 }
 
 void UninstallCustomStackUnwinder() {
-  g_custom_stack_unwinder_func = &GetStackTraceImpl;
+  glog_internal_namespace_::g_custom_stack_unwinder_func = &GetStackTraceImpl;
 }
-
-}  // namespace glog_internal_namespace_
 
 _END_GOOGLE_NAMESPACE_
 
