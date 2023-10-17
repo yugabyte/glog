@@ -132,7 +132,7 @@
 #endif
 
 #if defined(STACKTRACE_H)
-# define HAVE_STACKTRACE 1
+# define HAVE_STACKTRACE
 #endif
 
 
