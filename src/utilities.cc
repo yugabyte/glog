@@ -384,7 +384,7 @@ void InstallStackUnwinder(StackUnwinderFunc stack_unwinder) {
 }
 
 void RestoreDefaultStackUnwinder() {
-  glog_internal_namespace_::g_stack_unwinder_func = &GetStackTraceImpl;
+  glog_internal_namespace_::g_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
 }
 
 _END_GOOGLE_NAMESPACE_
