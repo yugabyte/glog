@@ -31,6 +31,8 @@
 //
 // Produce stack trace using libunwind
 
+#include "utilities.h"
+
 extern "C" {
 #define UNW_LOCAL_ONLY
 #include <libunwind.h>

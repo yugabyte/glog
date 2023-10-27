@@ -1,4 +1,4 @@
-// Copyright (c) 2008, Google Inc.
+  // Copyright (c) 2008, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -134,7 +134,6 @@
 #if defined(STACKTRACE_H)
 # define HAVE_STACKTRACE
 #endif
-
 
 #ifndef HAVE_SYMBOLIZE
 // defined by gcc
