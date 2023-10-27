@@ -368,25 +368,6 @@ void ShutdownGoogleLoggingUtilities() {
 
 }
 
-int GetStackTraceImpl(void** result, int max_depth, int skip_count);
-
-namespace glog_internal_namespace_ {
-static StackUnwinderFunc g_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
-}  // namespace glog_internal_namespace_
-
-int GetStackTrace(void** result, int max_depth, int skip_count) {
-  return glog_internal_namespace_::g_stack_unwinder_func(
-      result, max_depth, skip_count + 1);
-}
-
-void InstallStackUnwinder(StackUnwinderFunc stack_unwinder) {
-  glog_internal_namespace_::g_stack_unwinder_func = stack_unwinder;
-}
-
-void RestoreDefaultStackUnwinder() {
-  glog_internal_namespace_::g_stack_unwinder_func = &::GOOGLE_NAMESPACE::GetStackTraceImpl;
-}
-
 _END_GOOGLE_NAMESPACE_
 
 // Make an implementation of stacktrace compiled.

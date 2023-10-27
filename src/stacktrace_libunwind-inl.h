@@ -50,7 +50,7 @@ _START_GOOGLE_NAMESPACE_
 static bool g_now_entering = false;
 
 // If you change this function, also change GetStackFrames below.
-int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
+int GetStackTrace(void** result, int max_depth, int skip_count) {
   void *ip;
   int n = 0;
   unw_cursor_t cursor;

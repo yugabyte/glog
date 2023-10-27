@@ -37,7 +37,7 @@
 
 _START_GOOGLE_NAMESPACE_
 
-int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
+int GetStackTrace(void** result, int max_depth, int skip_count) {
   static thread_local bool is_collecting_stack = false;
 
   if (is_collecting_stack) {
@@ -47,7 +47,7 @@ int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
     return 0;
   }
 
-  static const int kMaxStackDepth = 256;
+  static const int kMaxStackDepth = 128;
   skip_count++;  // we want to skip the current frame as well
   skip_count = std::max(skip_count, 0);
   max_depth = std::max(max_depth, 0);

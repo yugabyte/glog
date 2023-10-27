@@ -1661,13 +1661,6 @@ GOOGLE_GLOG_DLL_DECL void InstallFailureSignalHandler();
 GOOGLE_GLOG_DLL_DECL void InstallFailureWriter(
     void (*writer)(const char* data, int size));
 
-
-typedef int (*StackUnwinderFunc)(void**, int, int);
-
-GOOGLE_GLOG_DLL_DECL void InstallStackUnwinder(StackUnwinderFunc collector_fn);
-
-GOOGLE_GLOG_DLL_DECL void RestoreDefaultStackUnwinder();
-
 GOOGLE_GLOG_DLL_DECL int GetStackTrace(
     void** result, int max_depth, int skip_count);
 
