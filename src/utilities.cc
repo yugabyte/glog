@@ -366,7 +366,7 @@ void ShutdownGoogleLoggingUtilities() {
 #endif
 }
 
-}
+}  // namespace glog_internal_namespace_
 
 _END_GOOGLE_NAMESPACE_
 
