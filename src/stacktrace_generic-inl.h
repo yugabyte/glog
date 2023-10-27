@@ -33,6 +33,9 @@
 // This can cause a deadlock in HeapProfiler.
 #include <execinfo.h>
 #include <string.h>
+
+#include <algorithm>
+
 #include "stacktrace.h"
 
 _START_GOOGLE_NAMESPACE_
@@ -61,7 +64,7 @@ int GetStackTrace(void** result, int max_depth, int skip_count) {
   int size = backtrace(stack, capacity);
   is_collecting_stack = false;
 
-  int result_count = std::max(size - skip_count, 0);
+  int result_count = std::clamp(size - skip_count, 0, max_depth);
   if (result_count > 0) {
     memcpy(result, stack + skip_count, sizeof(void*) * result_count);
   }
