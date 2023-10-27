@@ -150,10 +150,9 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
     char buf[256];
     buf[0] = 0;
     Symbolize(reinterpret_cast<char *>(stack[i]) - 1, buf, sizeof(buf));
-    printf("Backtrace %d: expected: %p..%p  actual: %p, matches: %d, symbol: %s",
+    printf("Backtrace %d: expected: %p..%p  actual: %p, matches: %d, symbol: %s\n",
            i, expected_range[i].start, expected_range[i].end, stack[i], match_index, buf);
     fflush(stdout);
-    printf("OK\n");
   }
   DECLARE_ADDRESS_LABEL(end);
   CHECK(success);
