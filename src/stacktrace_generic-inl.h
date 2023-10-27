@@ -50,7 +50,6 @@ int GetStackTrace(void** result, int max_depth, int skip_count) {
   static const int kMaxStackDepth = 128;
   skip_count++;  // we want to skip the current frame as well
   skip_count = std::max(skip_count, 0);
-  printf("effective skip_count: %d\n", skip_count);
   max_depth = std::max(max_depth, 0);
   int capacity = std::min(max_depth + skip_count, kMaxStackDepth);
   void** stack = reinterpret_cast<void**>(alloca(capacity * sizeof(void*)));

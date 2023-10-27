@@ -135,6 +135,7 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
     free(strings);
 #endif
   }
+  bool success = true;
   for (int i = 0; i < BACKTRACE_STEPS; i++) {
     int match_index = -1;
     for (int j = 0; j < BACKTRACE_STEPS; j++) {
@@ -142,6 +143,9 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
         match_index = j;
         break;
       }
+    }
+    if (match_index != i) {
+      success = false;
     }
     char buf[256];
     buf[0] = 0;
@@ -152,6 +156,7 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
     printf("OK\n");
   }
   DECLARE_ADDRESS_LABEL(end);
+  CHECK(success);
 }
 
 //-----------------------------------------------------------------------//
