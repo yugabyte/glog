@@ -120,8 +120,7 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
   ADJUST_ADDRESS_RANGE_FROM_RA(&expected_range[1]);
   INIT_ADDRESS_RANGE(CheckStackTraceLeaf, start, end, &expected_range[0]);
   DECLARE_ADDRESS_LABEL(start);
-  size = GetStackTrace(stack, STACK_LEN, -2);
-  // size = GetStackTraceImpl(stack, STACK_LEN, 0);
+  size = GetStackTrace(stack, STACK_LEN, 0);
   printf("Obtained %d stack frames.\n", size);
   CHECK_GE(size, 1);
   CHECK_LE(size, STACK_LEN);
