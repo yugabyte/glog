@@ -34,6 +34,7 @@
 #include "config.h"
 #include "base/commandlineflags.h"
 #include "glog/logging.h"
+#include "symbolize.h"
 #include "stacktrace.h"
 
 #ifdef HAVE_EXECINFO_H
@@ -103,10 +104,9 @@ AddressRange expected_range[BACKTRACE_STEPS];
 
 //-----------------------------------------------------------------------//
 
-static void CheckRetAddrIsInFunction(void *ret_addr, const AddressRange &range)
+bool CheckRetAddrIsInFunction(void *ret_addr, const AddressRange &range)
 {
-  CHECK_GE(ret_addr, range.start);
-  CHECK_LE(ret_addr, range.end);
+  return ret_addr >= range.start && ret_addr <= range.end;
 }
 
 //-----------------------------------------------------------------------//
@@ -135,14 +135,27 @@ static void ATTRIBUTE_NOINLINE CheckStackTraceLeaf(void) {
     free(strings);
 #endif
   }
+  bool success = true;
   for (int i = 0; i < BACKTRACE_STEPS; i++) {
-    printf("Backtrace %d: expected: %p..%p  actual: %p ... ",
-           i, expected_range[i].start, expected_range[i].end, stack[i]);
+    int match_index = -1;
+    for (int j = 0; j < BACKTRACE_STEPS; j++) {
+      if (CheckRetAddrIsInFunction(stack[i], expected_range[j])) {
+        match_index = j;
+        break;
+      }
+    }
+    if (match_index != i) {
+      success = false;
+    }
+    char buf[256];
+    buf[0] = 0;
+    Symbolize(reinterpret_cast<char *>(stack[i]) - 1, buf, sizeof(buf));
+    printf("Backtrace %d: expected: %p..%p  actual: %p, matches: %d, symbol: %s\n",
+           i, expected_range[i].start, expected_range[i].end, stack[i], match_index, buf);
     fflush(stdout);
-    CheckRetAddrIsInFunction(stack[i], expected_range[i]);
-    printf("OK\n");
   }
   DECLARE_ADDRESS_LABEL(end);
+  CHECK(success);
 }
 
 //-----------------------------------------------------------------------//

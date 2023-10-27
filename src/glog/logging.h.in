@@ -1661,6 +1661,9 @@ GOOGLE_GLOG_DLL_DECL void InstallFailureSignalHandler();
 GOOGLE_GLOG_DLL_DECL void InstallFailureWriter(
     void (*writer)(const char* data, int size));
 
+GOOGLE_GLOG_DLL_DECL int GetStackTrace(
+    void** result, int max_depth, int skip_count);
+
 @ac_google_end_namespace@
 
 #endif // _LOGGING_H_
