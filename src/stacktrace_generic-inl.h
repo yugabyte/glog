@@ -48,9 +48,9 @@ int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
   }
 
   static const int kMaxStackDepth = 256;
+  skip_count++;  // we want to skip the current frame as well
   skip_count = std::max(skip_count, 0);
   max_depth = std::max(max_depth, 0);
-  skip_count++;  // we want to skip the current frame as well
   int capacity = std::min(max_depth + skip_count, kMaxStackDepth);
   void** stack = reinterpret_cast<void**>(alloca(capacity * sizeof(void*)));
 
@@ -59,7 +59,7 @@ int GetStackTraceImpl(void** result, int max_depth, int skip_count) {
   is_collecting_stack = false;
 
   int result_count = std::min(max_depth, std::max(size - skip_count, 0));
-  memcpy(result, stack, sizeof(void*) * result_count);
+  memcpy(result, stack + skip_count, sizeof(void*) * result_count);
   return result_count;
 }
 
