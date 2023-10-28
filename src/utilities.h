@@ -123,13 +123,13 @@
 
 #if !defined(STACKTRACE_H) && defined(HAVE_EXECINFO_H)
 # define STACKTRACE_H "stacktrace_generic-inl.h"
-# define YB_USING_STRACKTRACE_GENERIC_H 1
+# define YB_USING_STRACKTRACE_GENERIC_H
 #endif
 
-#if defined(__linux__) && !YB_USING_STRACKTRACE_GENERIC_H
-#error "YugabyteDB requirement: we should always use glibc stack unwinder on Linux"
-#undef YB_USING_STRACKTRACE_GENERIC_H
+#ifndef YB_USING_STRACKTRACE_GENERIC_H
+#error "YugabyteDB requirement: we should always use stack unwinder based on the backtrace function"
 #endif
+#undef YB_USING_STRACKTRACE_GENERIC_H
 
 #if defined(STACKTRACE_H)
 # define HAVE_STACKTRACE
