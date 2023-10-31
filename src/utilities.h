@@ -105,7 +105,12 @@
 // correctly when GetStackTrace() is called with max_depth == 0.
 // Some code may do that.
 
-#if !defined(__linux__)
+#if defined(HAVE_EXECINFO_H)
+# define STACKTRACE_H "stacktrace_generic-inl.h"
+# define GLOG_USING_STACKTRACE_GENERIC_H
+#endif
+
+#if !defined(STACKTRACE_H)
 #if defined(HAVE_LIB_UNWIND)
 # define STACKTRACE_H "stacktrace_libunwind-inl.h"
 #elif !defined(NO_FRAME_POINTER)
@@ -118,18 +123,21 @@
 # elif defined(OS_WINDOWS)
 #  define STACKTRACE_H "stacktrace_windows-inl.h"
 # endif
-#endif
-#endif
+#endif  // !defined(NO_FRAME_POINTER)
+#endif  // !defined(STACKTRACE_H)
 
-#if !defined(STACKTRACE_H) && defined(HAVE_EXECINFO_H)
+#if !defined(STACKTRACE_H)
 # define STACKTRACE_H "stacktrace_generic-inl.h"
-# define YB_USING_STRACKTRACE_GENERIC_H
+# define GLOG_USING_STACKTRACE_GENERIC_H
 #endif
 
-#ifndef YB_USING_STRACKTRACE_GENERIC_H
-#error "YugabyteDB requirement: we should always use stack unwinder based on the backtrace function"
+// Enforce that we always use stacktrace_generic-inl.h.
+#if !defined(GLOG_USING_STACKTRACE_GENERIC_H)
+#pragma message("Stack trace header: " STACKTRACE_H)
+#error Unexpected stack trace header (see above)
 #endif
-#undef YB_USING_STRACKTRACE_GENERIC_H
+
+#undef GLOG_USING_STACKTRACE_GENERIC_H
 
 #if defined(STACKTRACE_H)
 # define HAVE_STACKTRACE
